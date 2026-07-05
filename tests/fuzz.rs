@@ -7,7 +7,9 @@
 use std::time::{Duration, Instant};
 use std::{sync::Arc, thread};
 
-use rsignal::sync::{create, Disconnected, NoReceivers, Signaler, TryWaitError, Waiter, WaitTimeoutError};
+use rsignals::sync::{
+    create, Disconnected, NoReceivers, Signaler, TryWaitError, WaitTimeoutError, Waiter,
+};
 
 /// Seeded xorshift64* PRNG. Deterministic and dependency-free.
 struct Rng(u64);
@@ -105,12 +107,20 @@ fn fuzz_state_machine_against_model() {
             // Check every live handle agrees with the model.
             if let Some(s) = sigs.first() {
                 assert_eq!(s.is_signaled(), fired, "seed {seed}: signaler.is_signaled");
-                assert_eq!(s.signaler_count(), sigs.len(), "seed {seed}: signaler_count");
+                assert_eq!(
+                    s.signaler_count(),
+                    sigs.len(),
+                    "seed {seed}: signaler_count"
+                );
                 assert_eq!(s.waiter_count(), waiters.len(), "seed {seed}: waiter_count");
             }
             if let Some(w) = waiters.first() {
                 assert_eq!(w.is_signaled(), fired, "seed {seed}: waiter.is_signaled");
-                assert_eq!(w.is_disconnected(), disconnected, "seed {seed}: is_disconnected");
+                assert_eq!(
+                    w.is_disconnected(),
+                    disconnected,
+                    "seed {seed}: is_disconnected"
+                );
                 let expected = if fired {
                     Ok(())
                 } else if disconnected {
@@ -119,8 +129,16 @@ fn fuzz_state_machine_against_model() {
                     Err(TryWaitError::Pending)
                 };
                 assert_eq!(w.try_wait(), expected, "seed {seed}: try_wait");
-                assert_eq!(w.signaler_count(), sigs.len(), "seed {seed}: w.signaler_count");
-                assert_eq!(w.waiter_count(), waiters.len(), "seed {seed}: w.waiter_count");
+                assert_eq!(
+                    w.signaler_count(),
+                    sigs.len(),
+                    "seed {seed}: w.signaler_count"
+                );
+                assert_eq!(
+                    w.waiter_count(),
+                    waiters.len(),
+                    "seed {seed}: w.waiter_count"
+                );
             }
         }
     }
@@ -222,7 +240,11 @@ fn fuzz_many_waiters_random_timeouts_all_released() {
         assert_eq!(tx.signal(), Ok(true));
 
         for h in handles {
-            assert_eq!(h.join().unwrap(), Ok(()), "seed {seed}: every waiter released");
+            assert_eq!(
+                h.join().unwrap(),
+                Ok(()),
+                "seed {seed}: every waiter released"
+            );
         }
     }
 }
@@ -236,8 +258,14 @@ fn fuzz_many_waiters_random_timeouts_all_released() {
 fn zero_timeout_snapshots_state() {
     let (tx, rx) = create();
     let start = Instant::now();
-    assert_eq!(rx.wait_timeout(Duration::ZERO), Err(WaitTimeoutError::Timeout));
-    assert!(start.elapsed() < Duration::from_millis(50), "zero timeout must not block");
+    assert_eq!(
+        rx.wait_timeout(Duration::ZERO),
+        Err(WaitTimeoutError::Timeout)
+    );
+    assert!(
+        start.elapsed() < Duration::from_millis(50),
+        "zero timeout must not block"
+    );
 
     assert_eq!(tx.signal(), Ok(true));
     assert_eq!(rx.wait_timeout(Duration::ZERO), Ok(()));
@@ -344,7 +372,10 @@ fn concurrent_try_wait_around_fire() {
                     Err(TryWaitError::Pending) => {}
                     Err(TryWaitError::Disconnected) => panic!("never disconnected here"),
                 }
-                assert!(start.elapsed() < Duration::from_secs(5), "fire never observed");
+                assert!(
+                    start.elapsed() < Duration::from_secs(5),
+                    "fire never observed"
+                );
             })
         })
         .collect();

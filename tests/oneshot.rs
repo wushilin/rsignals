@@ -11,7 +11,7 @@ use std::sync::{mpsc, Arc, Barrier, Mutex};
 use std::thread;
 use std::time::{Duration, Instant};
 
-use rsignal::sync::{create, Disconnected, NoReceivers, TryWaitError, WaitTimeoutError, Waiter};
+use rsignals::sync::{create, Disconnected, NoReceivers, TryWaitError, WaitTimeoutError, Waiter};
 
 const MANY: usize = 16; // "at least 10" waiters / signalers
 const WATCHDOG: Duration = Duration::from_secs(5);
@@ -119,7 +119,11 @@ fn many_concurrent_signalers_exactly_one_wins() {
     for h in handles {
         h.join().unwrap();
     }
-    assert_eq!(wins.load(Ordering::SeqCst), 1, "exactly one signal must win");
+    assert_eq!(
+        wins.load(Ordering::SeqCst),
+        1,
+        "exactly one signal must win"
+    );
 }
 
 /// 5. Repeated `signal()` calls after Fired always return `Ok(false)`.

@@ -38,7 +38,7 @@
 //! #     let mut cx = Context::from_waker(&w);
 //! #     loop { match f.as_mut().poll(&mut cx) { Poll::Ready(v) => return v, Poll::Pending => thread::park() } }
 //! # }
-//! let (tx, rx) = rsignal::r#async::create();
+//! let (tx, rx) = rsignals::r#async::create();
 //! assert_eq!(tx.signal(), Ok(true));
 //! assert_eq!(block_on(rx.wait()), Ok(()));
 //! ```

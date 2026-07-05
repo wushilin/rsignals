@@ -1,4 +1,4 @@
-//! `rsignal` — a one-shot, multi-signaler / multi-waiter, fail-safe broadcast event.
+//! `rsignals` — a one-shot, multi-signaler / multi-waiter, fail-safe broadcast event.
 //!
 //! See `plan.md` and `README.md` for the full design. In short, an event has one
 //! shared state with three outcomes:
@@ -33,7 +33,7 @@
 //! ```
 //! use std::thread;
 //!
-//! let (tx, rx) = rsignal::sync::create();
+//! let (tx, rx) = rsignals::sync::create();
 //! let rx2 = rx.clone();
 //!
 //! let waiter = thread::spawn(move || rx2.wait());
@@ -42,6 +42,9 @@
 //! assert_eq!(waiter.join().unwrap(), Ok(())); // waiter is released
 //! assert_eq!(tx.signal(), Ok(false)); // one-shot: later signals report already-fired
 //! ```
+
+#![forbid(unsafe_code)]
+#![warn(missing_docs)]
 
 pub mod error;
 pub mod sync;

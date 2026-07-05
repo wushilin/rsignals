@@ -25,7 +25,7 @@ use std::task::{Context, Poll, Wake, Waker};
 use std::thread;
 use std::time::{Duration, Instant};
 
-use rsignal::{r#async as async_signal, sync};
+use rsignals::{r#async as async_signal, sync};
 
 const DEFAULT_LARGE: usize = 1_000_000;
 const DEFAULT_SYNC_BLOCKING_WAITERS: usize = 1_000;
@@ -185,10 +185,11 @@ fn sync_one_to_many_blocking_waiters() {
 
     let woke = woke.load(Ordering::SeqCst);
     assert_eq!(woke, waiters);
-    println!(
-        "sync one-to-many about_to_fire -> everyone_got_it ~= {all_got_it:?}"
+    println!("sync one-to-many about_to_fire -> everyone_got_it ~= {all_got_it:?}");
+    assert_eq!(
+        all_got_it,
+        Duration::from_nanos(max_wake_ns.load(Ordering::Relaxed))
     );
-    assert_eq!(all_got_it, Duration::from_nanos(max_wake_ns.load(Ordering::Relaxed)));
     print_stats("sync one-to-many", waiters, 1, started, woke);
 }
 
@@ -333,10 +334,11 @@ fn sync_many_to_many_concurrent() {
         "every losing signaler must observe already-fired"
     );
     assert_eq!(woke.load(Ordering::SeqCst), waiters);
-    println!(
-        "sync many-to-many about_to_fire -> everyone_got_it ~= {all_got_it:?}"
+    println!("sync many-to-many about_to_fire -> everyone_got_it ~= {all_got_it:?}");
+    assert_eq!(
+        all_got_it,
+        Duration::from_nanos(max_wake_ns.load(Ordering::Relaxed))
     );
-    assert_eq!(all_got_it, Duration::from_nanos(max_wake_ns.load(Ordering::Relaxed)));
     println!(
         "sync many-to-many signal outcomes: fired={}, already_fired={}",
         wins.load(Ordering::SeqCst),

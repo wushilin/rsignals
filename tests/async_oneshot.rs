@@ -11,7 +11,7 @@ use std::task::{Context, Poll, Wake, Waker};
 use std::thread;
 use std::time::Duration;
 
-use rsignal::r#async::{create, Disconnected, NoReceivers, TryWaitError};
+use rsignals::r#async::{create, Disconnected, NoReceivers, TryWaitError};
 
 const MANY: usize = 12;
 

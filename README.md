@@ -1,10 +1,10 @@
-# rsignal
+# rsignals
 
 A **one-shot, multi-signaler / multi-waiter, fail-safe broadcast event** for Rust.
 
 ## Why
 
-`rsignal` exists to provide a **performant, reliable, and easy-to-use signal
+`rsignals` exists to provide a **performant, reliable, and easy-to-use signal
 service for multi-thread (and multi-task) coordination**.
 
 The usual Rust one-shot primitives are **SPSC** — single producer, single
@@ -13,7 +13,7 @@ part of the model. Real coordination problems are often wider than that: *any*
 of several workers may be the one to report "ready" / "shutdown" / "found it",
 and *many* threads or tasks need to hear about it at once.
 
-`rsignal` is **MPMC by design**: any number of signalers, any number of
+`rsignals` is **MPMC by design**: any number of signalers, any number of
 waiters, all sharing one event. The first signal wins and releases everyone —
 with clear, mpsc-style errors on every edge (all signalers gone, all waiters
 gone) so nothing ever blocks forever or fires into the void. Signaling is
@@ -25,12 +25,12 @@ releases *every* waiter; late waiters observe the fired state immediately; and t
 event is fail-safe on both sides — if all senders vanish, waiters are told; if all
 receivers vanish, the sender is told.
 
-Both a **blocking** (`rsignal::sync`) and a **runtime-agnostic async**
-(`rsignal::r#async`) variant are provided, with identical semantics and error
+Both a **blocking** (`rsignals::sync`) and a **runtime-agnostic async**
+(`rsignals::r#async`) variant are provided, with identical semantics and error
 types. Zero dependencies.
 
 > The async module is spelled `r#async` because `async` is a Rust keyword —
-> `use rsignal::r#async;` then `r#async::create()`.
+> `use rsignals::r#async;` then `r#async::create()`.
 
 ## The model
 
@@ -91,7 +91,7 @@ and still-pending are never conflated. `signal()` mirrors
 
 ```rust
 use std::thread;
-use rsignal::sync::create;
+use rsignals::sync::create;
 
 let (tx, rx) = create();
 let rx2 = rx.clone();
@@ -107,8 +107,8 @@ With a timeout:
 
 ```rust
 use std::time::Duration;
-use rsignal::sync::create;
-use rsignal::WaitTimeoutError;
+use rsignals::sync::create;
+use rsignals::WaitTimeoutError;
 
 let (tx, rx) = create();
 assert_eq!(rx.wait_timeout(Duration::ZERO), Err(WaitTimeoutError::Timeout));
@@ -121,7 +121,7 @@ assert_eq!(rx.wait_timeout(Duration::from_secs(1)), Ok(()));
 Runtime-agnostic — works under Tokio, async-std, smol, or any executor:
 
 ```rust,ignore
-let (tx, rx) = rsignal::r#async::create();
+let (tx, rx) = rsignals::r#async::create();
 
 tokio::spawn(async move {
     match rx.wait().await {
@@ -139,8 +139,8 @@ tx.signal().unwrap();
 ### Fail-safe edges
 
 ```rust
-use rsignal::sync::create;
-use rsignal::{Disconnected, NoReceivers};
+use rsignals::sync::create;
+use rsignals::{Disconnected, NoReceivers};
 
 // All signalers dropped -> waiters learn the event will never fire.
 let (tx, rx) = create();

@@ -240,7 +240,7 @@ pub struct Waiter {
 /// the same one-shot state.
 ///
 /// ```
-/// let (tx, rx) = rsignal::sync::create();
+/// let (tx, rx) = rsignals::sync::create();
 /// assert!(!rx.is_signaled());
 /// assert_eq!(tx.signal(), Ok(true));
 /// assert_eq!(rx.wait(), Ok(()));
@@ -264,8 +264,8 @@ impl Signaler {
     ///   the signal; the event is left unfired.
     ///
     /// ```
-    /// use rsignal::sync::create;
-    /// use rsignal::NoReceivers;
+    /// use rsignals::sync::create;
+    /// use rsignals::NoReceivers;
     ///
     /// let (tx, rx) = create();
     /// assert_eq!(tx.signal(), Ok(true));  // first wins
@@ -332,8 +332,8 @@ impl Waiter {
     ///
     /// ```
     /// use std::time::Duration;
-    /// use rsignal::sync::create;
-    /// use rsignal::WaitTimeoutError;
+    /// use rsignals::sync::create;
+    /// use rsignals::WaitTimeoutError;
     ///
     /// let (tx, rx) = create();
     /// assert_eq!(rx.wait_timeout(Duration::ZERO), Err(WaitTimeoutError::Timeout));

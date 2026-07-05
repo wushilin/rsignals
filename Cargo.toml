@@ -1,10 +1,14 @@
 [package]
-name = "rsignal"
+name = "rsignals"
 version = "0.1.0"
 edition = "2021"
-description = "One-shot multi-signaler / multi-waiter fail-safe broadcast event"
+rust-version = "1.70"
+description = "One-shot multi-signaler / multi-waiter fail-safe broadcast event for thread and task coordination (MPMC, sync + async, zero deps, no unsafe)"
 license = "Apache-2.0"
 repository = "https://github.com/wushilin/rsignal"
+documentation = "https://docs.rs/rsignals"
 readme = "README.md"
+keywords = ["oneshot", "broadcast", "event", "mpmc", "synchronization"]
+categories = ["concurrency", "asynchronous", "rust-patterns"]
 
 [dependencies]

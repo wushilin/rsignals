@@ -59,7 +59,7 @@ transition out of `Pending` ever succeeds.
 A Rust-style shape could be:
 
 ```rust
-let (tx, rx) = rsignal::sync::create();
+let (tx, rx) = rsignals::sync::create();
 
 let tx1 = tx.clone();
 let rx1 = rx.clone();
