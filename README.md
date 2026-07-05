@@ -170,4 +170,4 @@ waker-wiring and future cancellation) driven by a tiny dependency-free `block_on
 
 ## License
 
-MIT OR Apache-2.0
+Apache-2.0 — see [LICENSE](LICENSE).

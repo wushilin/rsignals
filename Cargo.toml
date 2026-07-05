@@ -3,6 +3,8 @@ name = "rsignal"
 version = "0.1.0"
 edition = "2021"
 description = "One-shot multi-signaler / multi-waiter fail-safe broadcast event"
-license = "MIT OR Apache-2.0"
+license = "Apache-2.0"
+repository = "https://github.com/wushilin/rsignal"
+readme = "README.md"
 
 [dependencies]
